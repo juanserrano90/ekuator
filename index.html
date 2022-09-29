@@ -1,9 +1,39 @@
 <!DOCTYPE html>
 <html>
 <body>
-
+<!-- apparently all CSS code goes here in <style> -->
+<style>
+#h {
+    width: 3em;
+  }
+#m {
+    width: 3em;
+  }
+#s {
+    width: 4em;
+  }
+</style>
+<!-- Heading and description of website -->
 <h1>Ekuator</h1>
 <p>Para usuarios del telescopio Gran Ecuatorial del Observatorio Astronómico de La Plata.</p>
+<!-- Entry of AR and DEC -->
+<p>Ingrese la Ascención Recta en <b>h</b>, <b>m</b>, <b>s</b>.</p>
+<input type="number" id="h" value="0">
+<input type="number" id="m" value="0">
+<input type="number" id="s" value="00.00" step="0.01">
+<input type="submit" value="Submit">
+<!-- calculate and return sum of two number inputs -->
+<script>
+function myFunction() {
+    var h = document.getElementById("h").value;
+    var m = document.getElementById("m").value;
+    var s = document.getElementById("s").value;
+    var sum = h + m + s;
+    document.getElementById("demo").innerHTML = sum;
+}
+</script>
+<!-- display result -->
+<p>Resultado: <span id="demo"></span></p>
 
 </body>
 </html>
