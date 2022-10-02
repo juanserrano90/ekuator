@@ -1,39 +1,130 @@
 <!DOCTYPE html>
-<html>
-<body>
-<!-- apparently all CSS code goes here in <style> -->
+<html lang="es-AR">
+<head>
+
+<title>Ekuator</title>
+<!-- favicons for different devices  -->
+<link rel="apple-touch-icon" sizes="57x57" href="/images/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="/images/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="/images/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="/images/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="/images/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="/images/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="/images/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/images/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="/images/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+
+<!-- global style definitions  -->
 <style>
-#h {
-    width: 3em;
+  body {
+  color : #080808;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 16px;
+  background-color: powderblue;
+  text-align: center
   }
-#m {
-    width: 3em;
+  button {
+  font-family : 'Courier New', Courier, monospace;
+  color : #000000;
+  background-color: #fa6464;
+  padding: 3px;
   }
-#s {
-    width: 4em;
+  input {
+  font-family : 'Courier New';
+  color : #000000;
+  border: '2px solid #000000';
+  padding: 3px;
   }
 </style>
-<!-- Heading and description of website -->
-<h1>Ekuator</h1>
-<p>Para usuarios del telescopio Gran Ecuatorial del Observatorio Astronómico de La Plata.</p>
-<!-- Entry of AR and DEC -->
-<p>Ingrese la Ascención Recta en <b>h</b>, <b>m</b>, <b>s</b>.</p>
-<input type="number" id="h" value="0">
-<input type="number" id="m" value="0">
-<input type="number" id="s" value="00.00" step="0.01">
-<input type="submit" value="Submit">
+
+<!-- meta info about the website  -->
+<meta charset="UTF-8">
+<meta name="keywords" content="Gran Ecuatorial, Observatorio de La Plata, Ekuator">
+<meta name="description" content="Aplicación ara observar con el telescopio Gran Ecuatorial">
+<meta name="author" content="Juan Serrano">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<!-- here starts the website -->
+<body>
+<!-- heading and description of website -->
+<h1 title="2.0" style="text-align:center;font-size:7vw;font-family:'Courier New'">
+  Ekuator
+</h1>
+<p style="text-align:center;font-size:2.5vw;font-family:'Courier New';border:1px solid rgb(2, 2, 2)">
+  Para usuarios del telescopio Gran Ecuatorial <br> del Observatorio Astronómico de La Plata.
+</p>
+<hr>
+
+<!-- coordinates entry by user -->
+<p>
+  Ingrese la Ascención Recta (&#945) en <b>h</b>, <b>m</b>, <b>s</b>.
+</p>
+<form oninput="x.value=parseInt(h.value)+parseInt(m.value)" id="form1">
+  <label for="h">AR:</label>
+  <input type="number" id="h" name="h" value="0" min="0" max="24" 
+          maxlength="2" style="width:3em"  step="1">
+  <input type="number" id="m" name="m" value="0" min="0" max="60" 
+          maxlength="2" style="width:3em" step="1"> 
+  <input type="number" id="s" name="s" value="00.00" min="0" max="60" 
+          step="0.01" maxlength="5" style="width:4.2em">
+  = <output name="x" for="h m"></output>
+<br>
+<br>
+  <label for="h">DE:</label>
+  <input type="number" id="deg" id="deg" value="0" min="-90" max="90" 
+          maxlength="2" style="width:3em" step="1">
+  <input type="number" id="min" id="min" value="0" min="-60" max="60" 
+          maxlength="2" style="width:3em" step="1">
+  <input type="number" id="sec" id="sec" value="00.00" min="-60" max="60" 
+          step="0.01" maxlength="5" style="width:4.2em">
+  = 
+<br>
+<br>
+  <button type="button" onclick="calculate()">Calcular</button>
+<input type="reset">
+</form>
+
 <!-- calculate and return sum of two number inputs -->
 <script>
-function myFunction() {
+function angulo_horario() {
     var h = document.getElementById("h").value;
     var m = document.getElementById("m").value;
     var s = document.getElementById("s").value;
-    var sum = h + m + s;
+    var sum = h + m/60 + s/3600 - sidereal();
     document.getElementById("demo").innerHTML = sum;
 }
 </script>
-<!-- display result -->
-<p>Resultado: <span id="demo"></span></p>
+
+<!-- script to calculate the local sidereal time -->
+<script>
+function sidereal() {
+    var d = new Date();
+    var h = d.getUTCHours();
+    var m = d.getUTCMinutes();
+    var s = d.getUTCSeconds();
+    var ms = d.getUTCMilliseconds();
+    var jd = 367 * d.getUTCFullYear() - Math.floor((7 * (d.getUTCFullYear() + Math.floor((d.getUTCMonth() + 9) / 12))) * 0.25) + Math.floor(275 * d.getUTCMonth() / 9) + d.getUTCDate() + 1721013.5 + ((h * 3600 + m * 60 + s + ms / 1000) / 86400);
+    var t = (jd - 2451545) / 36525;
+    var gmst = 24110.54841 + t * (8640184.812866 + t * (0.093104 - t * 6.2e-6));
+    gmst = gmst / 3600 % 24;
+    var lst = gmst + (-57.932772*24/360);
+    if (lst < 0) {
+        lst += 24;
+    }
+    if (lst >= 24) {
+        lst -= 24;
+    }
+    document.getElementById("demo").innerHTML = lst;
+}
+</script>
+
+<!-- return sum of h, m and s -->
+<p>Las coordenadas locales son: <span id="demo"></span></p>
 
 </body>
 </html>
