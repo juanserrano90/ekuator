@@ -30,7 +30,7 @@
   button {
   font-family : 'Courier New', Courier, monospace;
   color : #000000;
-  background-color: #fa6464;
+  background-color: #f89393;
   padding: 3px;
   }
   input {
@@ -49,8 +49,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<!-- here starts the website -->
-<body>
+<!-- here starts the website content-->
+<body onload="loadUserSetting()">
 <!-- heading and description of website -->
 <h1 title="2.0" style="text-align:center;font-size:7vw;font-family:'Courier New'">
   Ekuator
@@ -58,73 +58,176 @@
 <p style="text-align:center;font-size:2.5vw;font-family:'Courier New';border:1px solid rgb(2, 2, 2)">
   Para usuarios del telescopio Gran Ecuatorial <br> del Observatorio Astronómico de La Plata.
 </p>
-<hr>
 
 <!-- coordinates entry by user -->
 <p>
-  Ingrese la Ascención Recta (&#945) en <b>h</b>, <b>m</b>, <b>s</b>.
+  Ingrese la Ascención Recta (&#945) en <b>hh:mm:ss.ss</b> <br>
+  y la Declinación (&#948) en <b>dd:mm:ss.ss</b>.
 </p>
-<form oninput="x.value=parseInt(h.value)+parseInt(m.value)" id="form1">
+
+<form oninput="oninputFunc()" id="form1">
   <label for="h">AR:</label>
   <input type="number" id="h" name="h" value="0" min="0" max="24" 
-          maxlength="2" style="width:3em"  step="1">
+          maxlength="2" style="width:3em"  step="1"> </input>
   <input type="number" id="m" name="m" value="0" min="0" max="60" 
           maxlength="2" style="width:3em" step="1"> 
   <input type="number" id="s" name="s" value="00.00" min="0" max="60" 
-          step="0.01" maxlength="5" style="width:4.2em">
-  = <output name="x" for="h m"></output>
+          step="0.01" maxlength="5" style="width:4.2em"> =  <output id="output_ar"></output>
+
 <br>
 <br>
+
   <label for="h">DE:</label>
   <input type="number" id="deg" id="deg" value="0" min="-90" max="90" 
           maxlength="2" style="width:3em" step="1">
   <input type="number" id="min" id="min" value="0" min="-60" max="60" 
           maxlength="2" style="width:3em" step="1">
   <input type="number" id="sec" id="sec" value="00.00" min="-60" max="60" 
-          step="0.01" maxlength="5" style="width:4.2em">
-  = 
+          step="0.01" maxlength="5" style="width:4.2em"> =  <output id="output_dec"></output>
 <br>
 <br>
-  <button type="button" onclick="calculate()">Calcular</button>
 <input type="reset">
-</form>
+<button type="button" onclick="calculate()">Calcular</button> <br> <br>
+<output id="show_t" style="border: 2px solid black;size: 10px;background-color: #51e251;padding: 5px;
+                          font-size: large;">t=</output>  
+<br> <br>
+<output id="show_dpn" style="border: 2px solid black;size: 10px;background-color: #51e251;padding: 5px;
+font-size: large;">DPN=</output>
+</form> 
 
-<!-- calculate and return sum of two number inputs -->
+<!-- <button type="button" onclick="test()">LST</button> <br>
+<output id="demo"></output> -->
+
+<!-- script to get local sidereal time -->
 <script>
-function angulo_horario() {
+// function test()
+// {
+// document.getElementById("demo").innerHTML = getLST()/15;  
+// }
+function getLST()
+{
+var now = new Date();
+var year = now.getUTCFullYear(); // get UTC from computer clock date & time (var now)
+var month = now.getUTCMonth() + 1;
+var day = now.getUTCDate();
+var hour = now.getUTCHours();
+var minute = now.getUTCMinutes();
+var second = now.getUTCSeconds();
+var longitude = -57.932772; // longitude of La Plata
+if( month == 1 || month == 2 )
+{
+year = year - 1;
+month = month + 12;
+}
+
+var lc = Math.floor( year/100 ); //integer # days / leap century
+var ly = 2 - lc + Math.floor( lc/4 ); //integer # days / leap year
+var y = Math.floor(365.25 * year); //integer # days / year
+var m = Math.floor(30.6001 * (month + 1)); //integer # days / month
+
+// now get julian days since J2000.0
+var jd = ly + y + m - 730550.5 + day + (hour + minute/60.0 + second/3600.0)/24.0;
+
+// julian centuries since J2000.0
+var jc = jd/36525.0;
+
+// Greenwich Mean Sidereal Time (GMST) in degrees
+var GMST = 280.46061837 + 360.98564736629*jd + 0.000387933*jc*jc - jc*jc*jc/38710000;
+
+if( GMST > 0.0 ) // circle goes round and round, adjust if < 0 or > 360 degrees
+{
+while( GMST > 360.0 )
+GMST -= 360.0;
+}
+else
+{
+while( GMST < 0.0 )
+GMST += 360.0;
+}
+
+var LST = GMST + longitude; // Local Sidereal Time (LST) in degrees
+if( LST > 0.0 ) // circle goes round and round, adjust LST if < 0 or > 360 degrees
+{
+while( LST > 360.0 )
+LST -= 360.0;
+}
+else
+{
+while( LST < 0.0 )
+LST += 360.0;
+}
+return LST; // in degrees
+}
+
+// script to calculate the local coordinates
+  function calculate() {
     var h = document.getElementById("h").value;
     var m = document.getElementById("m").value;
     var s = document.getElementById("s").value;
-    var sum = h + m/60 + s/3600 - sidereal();
-    document.getElementById("demo").innerHTML = sum;
-}
+    var deg = document.getElementById("deg").value;
+    var min = document.getElementById("min").value;
+    var sec = document.getElementById("sec").value;
+    var t = getLST()/15 - parseFloat(h) - parseFloat(m/60) - parseFloat(s/3600);
+    if (t < 0) {
+      t = t + 24;
+    }
+    // compute hour angle in hours, minutes and seconds
+    hour = Math.floor(t);
+    t = t - hour;
+    t = t * 60;
+    minute = Math.floor(t);
+    t = t - minute; 
+    t = t * 60;
+    second = Math.floor(t);
+    var dpn = parseFloat(90) - parseFloat(deg) + parseFloat(min/60) + parseFloat(sec/3600);
+    // compute dpn in degrees, minutes and seconds
+    deg = Math.floor(dpn); 
+    dpn = dpn - deg; 
+    dpn = dpn * 60;
+    min = Math.floor(dpn);
+    dpn = dpn - min; 
+    dpn = dpn * 60;
+    sec = Math.floor(dpn);
+    document.getElementById("show_t").innerHTML = hour+':'+minute+':'+second;
+    document.getElementById("show_dpn").innerHTML = deg+'°'+min+'′'+sec+'″';
+  }
+
+// script that shows the input to the side 
+  function oninputFunc() {
+    var x = document.getElementById("h").value;
+    var y = document.getElementById("m").value;
+    var z = document.getElementById("s").value;
+    var x1 = document.getElementById("deg").value;
+    var y1 = document.getElementById("min").value;
+    var z1 = document.getElementById("sec").value;
+    document.getElementById("output_ar").innerHTML = x + "h " + y + "m " + z + "s";
+    document.getElementById("output_dec").innerHTML = x1 + "°" + y1 + "'" + z1 + "&#34";
+  }
+  document.forms[0].addEventListener('reset', function() {
+      document.getElementById('output_dec').innerHTML = '';
+      document.getElementById('output_ar').innerHTML = '';
+      document.getElementById('show_t').innerHTML = '';
+      document.getElementById('show_dpn').innerHTML = '';
+  });
 </script>
 
-<!-- script to calculate the local sidereal time -->
-<script>
-function sidereal() {
-    var d = new Date();
-    var h = d.getUTCHours();
-    var m = d.getUTCMinutes();
-    var s = d.getUTCSeconds();
-    var ms = d.getUTCMilliseconds();
-    var jd = 367 * d.getUTCFullYear() - Math.floor((7 * (d.getUTCFullYear() + Math.floor((d.getUTCMonth() + 9) / 12))) * 0.25) + Math.floor(275 * d.getUTCMonth() / 9) + d.getUTCDate() + 1721013.5 + ((h * 3600 + m * 60 + s + ms / 1000) / 86400);
-    var t = (jd - 2451545) / 36525;
-    var gmst = 24110.54841 + t * (8640184.812866 + t * (0.093104 - t * 6.2e-6));
-    gmst = gmst / 3600 % 24;
-    var lst = gmst + (-57.932772*24/360);
-    if (lst < 0) {
-        lst += 24;
-    }
-    if (lst >= 24) {
-        lst -= 24;
-    }
-    document.getElementById("demo").innerHTML = lst;
-}
-</script>
 
-<!-- return sum of h, m and s -->
-<p>Las coordenadas locales son: <span id="demo"></span></p>
+<br>
+<table width="100%" height="auto" cellspacing="10" cellpadding="10" border="1px" 
+  style="border-collapse:collapse;border-color: black;border-style: solid">
+<tbody>
+<tr>
+  <th>Hora Local</th>
+  <th>Tiempo Sidereo Local </th>
+  <th>Longitud</th>
+</tr>
+<tr>
+  <td><input id="date" value="" size="20" type="text"></td>
+  <td><input id="degrees" value="0" size="1" type="text"></td>
+  <td><input id="lst" value="0"  type="text"></td>
+</tr>
+</tbody>
+</table>
 
 </body>
 </html>
