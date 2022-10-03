@@ -188,8 +188,8 @@ return LST; // in degrees
     dpn = dpn - min; 
     dpn = dpn * 60;
     sec = Math.floor(dpn);
-    document.getElementById("show_t").innerHTML = hour+':'+minute+':'+second;
-    document.getElementById("show_dpn").innerHTML = deg+'°'+min+'′'+sec+'″';
+    document.getElementById("show_t").innerHTML = "t = " + hour + ':' + minute + ':' + second;
+    document.getElementById("show_dpn").innerHTML = "DPN = " + deg + '°' + min + '′' + sec +' ″';
   }
 
 // script that shows the input to the side 
