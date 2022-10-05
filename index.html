@@ -39,6 +39,19 @@
   border: '2px solid #000000';
   padding: 3px;
   }
+  .tableclocks {
+  width: 100%;
+  background-color: powderblue;    
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid black;
+  border-collapse: collapse;
+  }
+  th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  }
 </style>
 
 <!-- meta info about the website  -->
@@ -49,17 +62,163 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
+<!-- javascript code -->
+<script>
+  longitude = -57.932772 // longitude of the telescope
+  function LoadUserSetting() { 
+    ShowTime();
+  }
+  
+  // script to get local sidereal time 
+  function getLST() {
+    var now = new Date();
+    var year = now.getUTCFullYear(); // get UTC from computer clock date & time (var now)
+    var month = now.getUTCMonth() + 1;
+    var day = now.getUTCDate();
+    var hour = now.getUTCHours();
+    var minute = now.getUTCMinutes();
+    var second = now.getUTCSeconds();
+    //var longitude = -57.932772; // longitude of La Plata
+    if( month == 1 || month == 2 )
+      {
+    year = year - 1;
+    month = month + 12;
+    }
+  
+    var lc = Math.floor( year/100 ); //integer # days / leap century
+    var ly = 2 - lc + Math.floor( lc/4 ); //integer # days / leap year
+    var y = Math.floor(365.25 * year); //integer # days / year
+    var m = Math.floor(30.6001 * (month + 1)); //integer # days / month
+  
+    // now get julian days since J2000.0
+    var jd = ly + y + m - 730550.5 + day + (hour + minute/60.0 + second/3600.0)/24.0;
+  
+    // julian centuries since J2000.0
+    var jc = jd/36525.0;
+  
+    // Greenwich Mean Sidereal Time (GMST) in degrees
+    var GMST = 280.46061837 + 360.98564736629*jd + 0.000387933*jc*jc - jc*jc*jc/38710000;
+  
+    if( GMST > 0.0 ) { // circle goes round and round, adjust if < 0 or > 360 degrees{
+    while( GMST > 360.0 )
+    GMST -= 360.0;
+    }
+    else {
+    while( GMST < 0.0 )
+    GMST += 360.0;
+    }
+  
+    var LST = GMST + longitude; // Local Sidereal Time (LST) in degrees
+    if( LST > 0.0 ) { // circle goes round and round, adjust LST if < 0 or > 360 degrees
+    while( LST > 360.0 )
+    LST -= 360.0;
+    }
+    else{
+    while( LST < 0.0 )
+    LST += 360.0;
+    }
+    return LST; // in degrees
+  }
+  
+  // script to calculate the local coordinates
+  function calculate() {
+    var h = document.getElementById("h").value;
+    var m = document.getElementById("m").value;
+    var s = document.getElementById("s").value;
+    var deg = document.getElementById("deg").value;
+    var min = document.getElementById("min").value;
+    var sec = document.getElementById("sec").value;
+    var t = getLST()/15 - parseFloat(h) - parseFloat(m/60) - parseFloat(s/3600);
+    if (t < 0) {
+      t = t + 24;
+    }
+    // compute hour angle in hours, minutes and seconds
+    hour = Math.floor(t);
+    t = t - hour;
+    t = t * 60;
+    minute = Math.floor(t);
+    t = t - minute; 
+    t = t * 60;
+    second = Math.floor(t);
+    var dpn = parseFloat(90) - parseFloat(deg) + parseFloat(min/60) + parseFloat(sec/3600);
+    // compute dpn in degrees, minutes and seconds
+    deg = Math.floor(dpn); 
+    dpn = dpn - deg; 
+    dpn = dpn * 60;
+    min = Math.floor(dpn);
+    dpn = dpn - min; 
+    dpn = dpn * 60;
+    sec = Math.floor(dpn);
+    document.getElementById("show_t").innerHTML = "t = " + hour + ':' + minute + ':' + second;
+    document.getElementById("show_dpn").innerHTML = "DPN = " + deg + '°' + min + '′' + sec +' ″';
+  }
+  
+  // script that shows the input to the side 
+  function oninputFunc() {
+    var x = document.getElementById("h").value;
+    var y = document.getElementById("m").value;
+    var z = document.getElementById("s").value;
+    var x1 = document.getElementById("deg").value;
+    var y1 = document.getElementById("min").value;
+    var z1 = document.getElementById("sec").value;
+    document.getElementById("output_ar").innerHTML = x + "h " + y + "m " + z + "s";
+    document.getElementById("output_dec").innerHTML = x1 + "°" + y1 + "'" + z1 + "&#34";
+  }
+  document.forms[0].addEventListener('reset', function() {
+        document.getElementById('output_dec').innerHTML = '';
+        document.getElementById('output_ar').innerHTML = '';
+        document.getElementById('show_t').innerHTML = '';
+        document.getElementById('show_dpn').innerHTML = '';
+  });
+  
+  function ShowTime() {
+    var date = new Date();
+    var h = date.getHours(); // 0 - 23
+    var m = date.getMinutes(); // 0 - 59
+    var s = date.getSeconds(); // 0 - 59
+    h = (h < 10) ? "0" + h : h;
+    m = (m < 10) ? "0" + m : m;
+    s = (s < 10) ? "0" + s : s;
+    var time = h + ":" + m + ":" + s + " " 
+
+    var lst = getLST()/15;
+    hour = Math.floor(lst);
+    hour = (hour < 10) ? "0" + hour : hour;
+    lst = lst - hour;
+    lst = lst * 60;
+    minute = Math.floor(lst);
+    minute = (minute < 10) ? "0" + minute : minute;
+    lst = lst - minute; 
+    lst = lst * 60;
+    second = Math.floor(lst);
+    second = (second < 10) ? "0" + second : second;
+    lst = hour + ":" + minute + ":" + second;
+   
+    long_deg = Math.floor(longitude) + 1;
+    long_min = Math.floor((longitude - long_deg) * (-60));
+    long_sec = ((longitude - long_deg) * (-60) - long_min) * (-60);
+    long_sec = long_sec.toFixed(2);
+
+    document.getElementById("Longitude").innerHTML = long_deg + "°" + long_min + "'" + long_sec + "&#34";
+    document.getElementById("MyClockDisplay").innerHTML = time;
+    document.getElementById("MyLSTClockDisplay").innerHTML = lst;
+    setTimeout(ShowTime, 1000);
+  }
+
+  </script>
+
 <!-- here starts the website content-->
-<body onload="loadUserSetting()">
+<body onload="LoadUserSetting()">
 <!-- heading and description of website -->
 <h1 title="2.0" style="text-align:center;font-size:7vw;font-family:'Courier New'">
   Ekuator
 </h1>
-<p style="text-align:center;font-size:2.5vw;font-family:'Courier New';border:1px solid rgb(2, 2, 2)">
+<h2 style="text-align:center;font-size:2.5vw;font-family:'Courier New';border:1px solid rgb(2, 2, 2)">
   Para usuarios del telescopio Gran Ecuatorial <br> del Observatorio Astronómico de La Plata.
-</p>
+</h2>
 
 <!-- coordinates entry by user -->
+<section>
 <p>
   Ingrese la Ascención Recta (&#945) en <b>hh:mm:ss.ss</b> <br>
   y la Declinación (&#948) en <b>dd:mm:ss.ss</b>.
@@ -94,140 +253,31 @@
 <output id="show_dpn" style="border: 2px solid black;size: 10px;background-color: #51e251;padding: 5px;
 font-size: large;">DPN=</output>
 </form> 
-
-<!-- <button type="button" onclick="test()">LST</button> <br>
-<output id="demo"></output> -->
-
-<!-- script to get local sidereal time -->
-<script>
-// function test()
-// {
-// document.getElementById("demo").innerHTML = getLST()/15;  
-// }
-function getLST()
-{
-var now = new Date();
-var year = now.getUTCFullYear(); // get UTC from computer clock date & time (var now)
-var month = now.getUTCMonth() + 1;
-var day = now.getUTCDate();
-var hour = now.getUTCHours();
-var minute = now.getUTCMinutes();
-var second = now.getUTCSeconds();
-var longitude = -57.932772; // longitude of La Plata
-if( month == 1 || month == 2 )
-{
-year = year - 1;
-month = month + 12;
-}
-
-var lc = Math.floor( year/100 ); //integer # days / leap century
-var ly = 2 - lc + Math.floor( lc/4 ); //integer # days / leap year
-var y = Math.floor(365.25 * year); //integer # days / year
-var m = Math.floor(30.6001 * (month + 1)); //integer # days / month
-
-// now get julian days since J2000.0
-var jd = ly + y + m - 730550.5 + day + (hour + minute/60.0 + second/3600.0)/24.0;
-
-// julian centuries since J2000.0
-var jc = jd/36525.0;
-
-// Greenwich Mean Sidereal Time (GMST) in degrees
-var GMST = 280.46061837 + 360.98564736629*jd + 0.000387933*jc*jc - jc*jc*jc/38710000;
-
-if( GMST > 0.0 ) // circle goes round and round, adjust if < 0 or > 360 degrees
-{
-while( GMST > 360.0 )
-GMST -= 360.0;
-}
-else
-{
-while( GMST < 0.0 )
-GMST += 360.0;
-}
-
-var LST = GMST + longitude; // Local Sidereal Time (LST) in degrees
-if( LST > 0.0 ) // circle goes round and round, adjust LST if < 0 or > 360 degrees
-{
-while( LST > 360.0 )
-LST -= 360.0;
-}
-else
-{
-while( LST < 0.0 )
-LST += 360.0;
-}
-return LST; // in degrees
-}
-
-// script to calculate the local coordinates
-  function calculate() {
-    var h = document.getElementById("h").value;
-    var m = document.getElementById("m").value;
-    var s = document.getElementById("s").value;
-    var deg = document.getElementById("deg").value;
-    var min = document.getElementById("min").value;
-    var sec = document.getElementById("sec").value;
-    var t = getLST()/15 - parseFloat(h) - parseFloat(m/60) - parseFloat(s/3600);
-    if (t < 0) {
-      t = t + 24;
-    }
-    // compute hour angle in hours, minutes and seconds
-    hour = Math.floor(t);
-    t = t - hour;
-    t = t * 60;
-    minute = Math.floor(t);
-    t = t - minute; 
-    t = t * 60;
-    second = Math.floor(t);
-    var dpn = parseFloat(90) - parseFloat(deg) + parseFloat(min/60) + parseFloat(sec/3600);
-    // compute dpn in degrees, minutes and seconds
-    deg = Math.floor(dpn); 
-    dpn = dpn - deg; 
-    dpn = dpn * 60;
-    min = Math.floor(dpn);
-    dpn = dpn - min; 
-    dpn = dpn * 60;
-    sec = Math.floor(dpn);
-    document.getElementById("show_t").innerHTML = "t = " + hour + ':' + minute + ':' + second;
-    document.getElementById("show_dpn").innerHTML = "DPN = " + deg + '°' + min + '′' + sec +' ″';
-  }
-
-// script that shows the input to the side 
-  function oninputFunc() {
-    var x = document.getElementById("h").value;
-    var y = document.getElementById("m").value;
-    var z = document.getElementById("s").value;
-    var x1 = document.getElementById("deg").value;
-    var y1 = document.getElementById("min").value;
-    var z1 = document.getElementById("sec").value;
-    document.getElementById("output_ar").innerHTML = x + "h " + y + "m " + z + "s";
-    document.getElementById("output_dec").innerHTML = x1 + "°" + y1 + "'" + z1 + "&#34";
-  }
-  document.forms[0].addEventListener('reset', function() {
-      document.getElementById('output_dec').innerHTML = '';
-      document.getElementById('output_ar').innerHTML = '';
-      document.getElementById('show_t').innerHTML = '';
-      document.getElementById('show_dpn').innerHTML = '';
-  });
-</script>
-
-
-<br>
-<!-- <table width="100%" height="auto" cellspacing="10" cellpadding="10" border="1px" 
-  style="border-collapse:collapse;border-color: black;border-style: solid">
+</section>
+<br> <br>
+<div >
+<table class="tableclocks">
 <tbody>
-<tr>
-  <th>Hora Local</th>
-  <th>Tiempo Sidereo Local </th>
-  <th>Longitud</th>
-</tr>
-<tr>
-  <td><input id="date" value="" size="20" type="text"></td>
-  <td><input id="degrees" value="0" size="1" type="text"></td>
-  <td><input id="lst" value="0"  type="text"></td>
-</tr>
+  <tr>
+    <th>Hora local</th>
+    <th>Tiempo Sidereo Local</th>
+    <th>Longitud</th>
+  </tr>
+  <tr>
+    <td id="MyClockDisplay"></td>
+    <td id="MyLSTClockDisplay"></td>
+    <td id="Longitude"></td>
+  </tr>
 </tbody>
-</table> -->
+</table>
+</div>
+<br>
+
+<footer>
+  <p style="font-size:small;font-family:Arial, Helvetica, sans-serif">Aplicación creada por el cuerpo de guías de la secretaría 
+    de extensión de la Facultad de Ciencias Astronómicas y Geofísicas
+     de la Universidad Nacional de La Plata.</p>
+</footer>
 
 </body>
 </html>
