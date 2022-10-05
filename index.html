@@ -196,7 +196,7 @@
    
     long_deg = Math.floor(longitude) + 1;
     long_min = Math.floor((longitude - long_deg) * (-60));
-    long_sec = ((longitude - long_deg) * (-60) - long_min) * (-60);
+    long_sec = ((longitude - long_deg) * (-60) - long_min) * (60);
     long_sec = long_sec.toFixed(2);
 
     document.getElementById("Longitude").innerHTML = long_deg + "°" + long_min + "'" + long_sec + "&#34";
@@ -207,7 +207,8 @@
 
   </script>
 
-<!-- here starts the website content-->
+<!-- WEBSITE CONTENT -->
+
 <body onload="LoadUserSetting()">
 <!-- heading and description of website -->
 <h1 title="2.0" style="text-align:center;font-size:7vw;font-family:'Courier New'">
@@ -255,6 +256,7 @@ font-size: large;">DPN=</output>
 </form> 
 </section>
 <br> <br>
+<!-- Clocks panel -->
 <div >
 <table class="tableclocks">
 <tbody>
