@@ -32,12 +32,21 @@
   color : #000000;
   background-color: #f89393;
   padding: 3px;
+  font-size: large;
   }
   input {
   font-family : 'Courier New';
   color : #000000;
   border: '2px solid #000000';
   padding: 3px;
+  font-size: large;
+  }
+  form {
+  text-align: center;
+  font-size: large;
+  }
+  p {
+  font-size: large;
   }
   .tableclocks {
   width: 100%;
@@ -47,6 +56,7 @@
   margin-right: auto;
   border: 1px solid black;
   border-collapse: collapse;
+  font-size: large;
   }
   th, td {
   border: 1px solid black;
@@ -149,8 +159,8 @@
     dpn = dpn - min; 
     dpn = dpn * 60;
     sec = Math.floor(dpn);
-    document.getElementById("show_t").innerHTML = "t = " + hour + ':' + minute + ':' + second;
-    document.getElementById("show_dpn").innerHTML = "DPN = " + deg + '°' + min + '′' + sec +' ″';
+    document.getElementById("show_t").innerHTML = "t = " + hour + 'h ' + minute + 'm ' + second + 's';
+    document.getElementById("show_dpn").innerHTML = "DPN = " + deg + '° ' + min + '′ ' + sec +' ″';
   }
   
   // script that shows the input to the side 
@@ -220,13 +230,15 @@
 
 <!-- coordinates entry by user -->
 <section>
-<p>
-  Ingrese la Ascención Recta (&#945) en <b>hh:mm:ss.ss</b> <br>
-  y la Declinación (&#948) en <b>dd:mm:ss.ss</b>.
+<p style="width:auto">
+  Esta aplicación transforma las coordenadas absolutas de la fecha 
+  a las coordenadas locales del telescopio. 
+  Ingrese la Ascención Recta (&#945) en <b>hh:mm:ss.ss</b>
+  y la Declinación (&#948) en <b>gg:mm:ss.ss</b>.
 </p>
 
 <form oninput="oninputFunc()" id="form1">
-  <label for="h">AR:</label>
+  <label for="h">&#945 =</label>
   <input type="number" id="h" name="h" value="0" min="0" max="24" 
           maxlength="2" style="width:3em"  step="1"> </input>
   <input type="number" id="m" name="m" value="0" min="0" max="60" 
@@ -237,22 +249,22 @@
 <br>
 <br>
 
-  <label for="h">DE:</label>
+  <label for="h">&#948 = </label>
   <input type="number" id="deg" id="deg" value="0" min="-90" max="90" 
-          maxlength="2" style="width:3em" step="1">
+          maxlength="3" style="width:3em" step="1">
   <input type="number" id="min" id="min" value="0" min="-60" max="60" 
-          maxlength="2" style="width:3em" step="1">
+          maxlength="3" style="width:3em" step="1">
   <input type="number" id="sec" id="sec" value="00.00" min="-60" max="60" 
-          step="0.01" maxlength="5" style="width:4.2em"> =  <output id="output_dec"></output>
+          step="0.01" maxlength="6" style="width:4.2em"> =  <output id="output_dec"></output>
 <br>
 <br>
 <input type="reset">
 <button type="button" onclick="calculate()">Calcular</button> <br> <br>
 <output id="show_t" style="border: 2px solid black;size: 10px;background-color: #51e251;padding: 5px;
-                          font-size: large;">t=</output>  
+                          font-size: large;">t = </output>  
 <br> <br>
 <output id="show_dpn" style="border: 2px solid black;size: 10px;background-color: #51e251;padding: 5px;
-font-size: large;">DPN=</output>
+font-size: large;">DPN = </output>
 </form> 
 </section>
 <br> <br>
@@ -276,7 +288,7 @@ font-size: large;">DPN=</output>
 <br>
 
 <footer>
-  <p style="font-size:small;font-family:Arial, Helvetica, sans-serif">Aplicación creada por el cuerpo de guías de la secretaría 
+  <p style="font-size:small;font-family:'Courier New', Courier, monospace">Aplicación creada por el cuerpo de guías de la secretaría 
     de extensión de la Facultad de Ciencias Astronómicas y Geofísicas
      de la Universidad Nacional de La Plata.</p>
 </footer>
