@@ -25,17 +25,19 @@
   font-family: 'Courier New', Courier, monospace;
   font-size: 16px;
   background-color: powderblue;
-  text-align: center
+  text-align: center;
+  transition: background-color 0.3s, color 0.3s;
   }
   button {
-  font-family : 'Courier New', Courier, monospace;
-  color : #000000;
-  background-color: #f89393;
+  font-family: 'Courier New', Courier, monospace;
+  color: #000000;
+  background-color: #cbc8c8;
   padding: 3px;
   font-size: large;
   }
   input {
   font-family : 'Courier New';
+  background-color: rgb(255, 255, 255);
   color : #000000;
   border: '2px solid #000000';
   padding: 3px;
@@ -62,6 +64,37 @@
   border: 1px solid black;
   border-collapse: collapse;
   }
+
+  /* Dark mode styles */
+  body.dark-mode {
+  background-color: #121212;
+  color: #e0e0e0;
+  }
+  input.dark-mode {
+  font-family : 'Courier New';
+  background-color: rgb(1, 1, 1);
+  color : #ffffff;
+  border: '2px solid #000000';
+  padding: 3px;
+  font-size: large;
+  }
+  button.dark-mode {
+  background-color: #333333;
+  color: #e0e0e0;
+  padding: 3px;
+  font-size: large;
+  }
+  .tableclocks.dark-mode {
+  background-color: #1e1e1e;
+  color: #e0e0e0;
+  width: 100%;  
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid black;
+  border-collapse: collapse;
+  font-size: large;
+  }
 </style>
 
 <!-- meta info about the website  -->
@@ -74,11 +107,38 @@
 
 <!-- javascript code -->
 <script>
-  longitude = -57.932772 // longitude of the telescope
+  let longitude = -57.932772; // longitude of the telescope
+
   function LoadUserSetting() { 
     ShowTime();
   }
-  
+
+
+  function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    const tables = document.querySelectorAll('.tableclocks');
+    tables.forEach(table => table.classList.toggle('dark-mode'));
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(button => button.classList.toggle('dark-mode'));
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach(input => input.classList.toggle('dark-mode'));
+    const headers = document.querySelectorAll('.dark-mode-toggle');
+    headers.forEach(header => {
+      if (document.body.classList.contains('dark-mode')) {
+        header.style.border = '1px solid white';
+      } else {
+        header.style.border = '1px solid rgb(2, 2, 2)';
+      }
+    });
+
+    const darkModeButton = document.getElementById('darkModeButton');
+    if (document.body.classList.contains('dark-mode')) {
+      darkModeButton.textContent = 'Modo claro';
+    } else {
+      darkModeButton.textContent = 'Modo oscuro';
+    }
+  }
+
   // script to get local sidereal time 
   function getLST() {
     var now = new Date();
@@ -224,8 +284,12 @@
 <h1 title="2.0" style="text-align:center;font-size:7vw;font-family:'Courier New'">
   Ekuator
 </h1>
-<h2 style="text-align:center;font-size:2.5vw;font-family:'Courier New';border:1px solid rgb(2, 2, 2)">
-  Para usuarios del telescopio Gran Ecuatorial <br> del Observatorio Astronómico de La Plata.
+<!-- add dark mode button here -->
+<button onclick="toggleDarkMode()" id="darkModeButton">Modo oscuro</button>
+
+
+<h2 class="dark-mode-toggle" style="text-align:center;font-size: large;font-family:'Courier New';border:1px solid rgb(2, 2, 2)">
+  Para usuarios del telescopio Gran Ecuatorial <br> del Observatorio Astronómico de La Plata
 </h2>
 
 <!-- coordinates entry by user -->
@@ -260,11 +324,11 @@
 <br>
 <input type="reset">
 <button type="button" onclick="calculate()">Calcular</button> <br> <br>
-<output id="show_t" style="border: 2px solid black;size: 10px;background-color: #51e251;padding: 5px;
-                          font-size: large;">t = </output>  
+<output id="show_t" style="border: 2px solid black;size: 10px;background-color: #89f689;padding: 5px;
+                          font-size: large;color: rgb(0, 0, 0);">t = </output>  
 <br> <br>
-<output id="show_dpn" style="border: 2px solid black;size: 10px;background-color: #51e251;padding: 5px;
-font-size: large;">DPN = </output>
+<output id="show_dpn" style="border: 2px solid black;size: 10px;background-color: #89f689;padding: 5px;
+font-size: large;color: rgb(0, 0, 0);">DPN = </output>
 </form> 
 </section>
 <br> <br>
