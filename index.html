@@ -284,9 +284,14 @@
 <h1 title="2.0" style="text-align:center;font-size:7vw;font-family:'Courier New'">
   Ekuator
 </h1>
-<!-- add dark mode button here -->
-<button onclick="toggleDarkMode()" id="darkModeButton">Modo oscuro</button>
 
+<!-- add dark mode button here -->
+<button onclick="toggleDarkMode()" id="darkModeButton">Modo claro</button>
+<script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+    toggleDarkMode();
+  });
+</script>
 
 <h2 class="dark-mode-toggle" style="text-align:center;font-size: large;font-family:'Courier New';border:1px solid rgb(2, 2, 2)">
   Para usuarios del telescopio Gran Ecuatorial <br> del Observatorio Astronómico de La Plata
