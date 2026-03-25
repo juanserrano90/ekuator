@@ -108,9 +108,186 @@
 <!-- javascript code -->
 <script>
   let longitude = -57.932772; // longitude of the telescope
+  const southernObjectCatalog = [
+    { name: "Omega Centauri", type: "Cluster", ra: { h: 13, m: 26, s: 47.28 }, dec: { d: -47, m: 28, s: 46.1 } },
+    { name: "47 Tucanae", type: "Cluster", ra: { h: 0, m: 24, s: 5.67 }, dec: { d: -72, m: 4, s: 52.6 } },
+    { name: "Jewel Box (NGC 4755)", type: "Cluster", ra: { h: 12, m: 53, s: 41.0 }, dec: { d: -60, m: 21, s: 18.0 } },
+    { name: "Eta Carinae Nebula", type: "Nebula", ra: { h: 10, m: 45, s: 3.59 }, dec: { d: -59, m: 41, s: 4.3 } },
+    { name: "Tarantula Nebula", type: "Nebula", ra: { h: 5, m: 38, s: 42.4 }, dec: { d: -69, m: 6, s: 3.0 } },
+    { name: "Canopus", type: "Star", ra: { h: 6, m: 23, s: 57.11 }, dec: { d: -52, m: 41, s: 44.38 } },
+    { name: "Achernar", type: "Star", ra: { h: 1, m: 37, s: 42.85 }, dec: { d: -57, m: 14, s: 12.31 } },
+    { name: "Alpha Centauri", type: "Star", ra: { h: 14, m: 39, s: 36.49 }, dec: { d: -60, m: 50, s: 2.37 } },
+    { name: "Large Magellanic Cloud", type: "Galaxy", ra: { h: 5, m: 23, s: 34.5 }, dec: { d: -69, m: 45, s: 22.0 } },
+    { name: "Small Magellanic Cloud", type: "Galaxy", ra: { h: 0, m: 52, s: 44.8 }, dec: { d: -72, m: 49, s: 43.0 } },
+    { name: "Sculptor Galaxy (NGC 253)", type: "Galaxy", ra: { h: 0, m: 47, s: 33.1 }, dec: { d: -25, m: 17, s: 18.0 } },
+    { name: "Centaurus A", type: "Galaxy", ra: { h: 13, m: 25, s: 27.6 }, dec: { d: -43, m: 1, s: 9.0 } }
+  ];
 
   function LoadUserSetting() { 
+    initializeObjectSearch();
     ShowTime();
+  }
+
+  function initializeObjectSearch() {
+    const datalist = document.getElementById("objectOptions");
+    if (!datalist) {
+      return;
+    }
+    datalist.innerHTML = "";
+    for (let i = 0; i < southernObjectCatalog.length; i++) {
+      const option = document.createElement("option");
+      option.value = southernObjectCatalog[i].name;
+      option.label = southernObjectCatalog[i].type;
+      datalist.appendChild(option);
+    }
+  }
+
+  function normalizeDegrees(angle) {
+    let value = angle % 360;
+    if (value < 0) {
+      value += 360;
+    }
+    return value;
+  }
+
+  function julianDay(date) {
+    let year = date.getUTCFullYear();
+    let month = date.getUTCMonth() + 1;
+    const day = date.getUTCDate() + (date.getUTCHours() + date.getUTCMinutes() / 60 + date.getUTCSeconds() / 3600) / 24;
+
+    if (month <= 2) {
+      year -= 1;
+      month += 12;
+    }
+
+    const A = Math.floor(year / 100);
+    const B = 2 - A + Math.floor(A / 4);
+    return Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + B - 1524.5;
+  }
+
+  function raToHours(ra) {
+    return parseFloat(ra.h) + parseFloat(ra.m) / 60 + parseFloat(ra.s) / 3600;
+  }
+
+  function decToDegrees(dec) {
+    const sign = (parseFloat(dec.d) < 0 || parseFloat(dec.m) < 0 || parseFloat(dec.s) < 0) ? -1 : 1;
+    const absDeg = Math.abs(parseFloat(dec.d)) + Math.abs(parseFloat(dec.m)) / 60 + Math.abs(parseFloat(dec.s)) / 3600;
+    return sign * absDeg;
+  }
+
+  function precessJ2000ToDate(raHours, decDegrees, date) {
+    const jd = julianDay(date);
+    const T = (jd - 2451545.0) / 36525.0;
+
+    const zetaArcsec = 2306.2181 * T + 0.30188 * T * T + 0.017998 * T * T * T;
+    const zArcsec = 2306.2181 * T + 1.09468 * T * T + 0.018203 * T * T * T;
+    const thetaArcsec = 2004.3109 * T - 0.42665 * T * T - 0.041833 * T * T * T;
+
+    const zeta = zetaArcsec / 3600 * Math.PI / 180;
+    const z = zArcsec / 3600 * Math.PI / 180;
+    const theta = thetaArcsec / 3600 * Math.PI / 180;
+
+    const alpha = raHours * 15 * Math.PI / 180;
+    const delta = decDegrees * Math.PI / 180;
+
+    const A = Math.cos(delta) * Math.sin(alpha + zeta);
+    const B = Math.cos(theta) * Math.cos(delta) * Math.cos(alpha + zeta) - Math.sin(theta) * Math.sin(delta);
+    const C = Math.sin(theta) * Math.cos(delta) * Math.cos(alpha + zeta) + Math.cos(theta) * Math.sin(delta);
+
+    const alphaDate = Math.atan2(A, B) + z;
+    const deltaDate = Math.asin(C);
+
+    return {
+      raHours: normalizeDegrees(alphaDate * 180 / Math.PI) / 15,
+      decDegrees: deltaDate * 180 / Math.PI
+    };
+  }
+
+  function decimalHoursToHMS(hours) {
+    let totalSeconds = ((hours * 3600) % 86400 + 86400) % 86400;
+    let h = Math.floor(totalSeconds / 3600);
+    totalSeconds -= h * 3600;
+    let m = Math.floor(totalSeconds / 60);
+    let s = parseFloat((totalSeconds - m * 60).toFixed(2));
+
+    if (s >= 60) {
+      s -= 60;
+      m += 1;
+    }
+    if (m >= 60) {
+      m -= 60;
+      h += 1;
+    }
+    if (h >= 24) {
+      h -= 24;
+    }
+
+    return { h: h, m: m, s: s };
+  }
+
+  function decimalDegreesToDMS(degrees) {
+    const sign = degrees < 0 ? -1 : 1;
+    let absDegrees = Math.abs(degrees);
+    let d = Math.floor(absDegrees);
+    absDegrees = (absDegrees - d) * 60;
+    let m = Math.floor(absDegrees);
+    let s = parseFloat(((absDegrees - m) * 60).toFixed(2));
+
+    if (s >= 60) {
+      s -= 60;
+      m += 1;
+    }
+    if (m >= 60) {
+      m -= 60;
+      d += 1;
+    }
+
+    return { d: d * sign, m: m, s: s };
+  }
+
+  function formatHMS(value) {
+    return value.h + "h " + value.m + "m " + value.s.toFixed(2) + "s";
+  }
+
+  function formatDMS(value) {
+    return value.d + "° " + value.m + "' " + value.s.toFixed(2) + "\"";
+  }
+
+  function applySelectedObject() {
+    const searchInput = document.getElementById("objectSearch");
+    const infoOutput = document.getElementById("objectInfo");
+    if (!searchInput || !infoOutput) {
+      return;
+    }
+
+    const query = searchInput.value.trim().toLowerCase();
+    const selected = southernObjectCatalog.find(function(item) {
+      return item.name.toLowerCase() === query;
+    });
+
+    if (!selected) {
+      infoOutput.innerHTML = "Objeto no encontrado en el catalogo local.";
+      return;
+    }
+
+    const j2000RaHours = raToHours(selected.ra);
+    const j2000DecDegrees = decToDegrees(selected.dec);
+    const dateCoords = precessJ2000ToDate(j2000RaHours, j2000DecDegrees, new Date());
+    const raDate = decimalHoursToHMS(dateCoords.raHours);
+    const decDate = decimalDegreesToDMS(dateCoords.decDegrees);
+
+    document.getElementById("h").value = raDate.h;
+    document.getElementById("m").value = raDate.m;
+    document.getElementById("s").value = raDate.s.toFixed(2);
+    document.getElementById("deg").value = decDate.d;
+    document.getElementById("min").value = decDate.m;
+    document.getElementById("sec").value = decDate.s.toFixed(2);
+
+    oninputFunc();
+    calculate();
+
+    infoOutput.innerHTML = selected.type + " | J2000: AR " + formatHMS(selected.ra) + " Dec " + formatDMS(selected.dec) +
+                           " | Fecha: AR " + formatHMS(raDate) + " Dec " + formatDMS(decDate);
   }
 
 
@@ -239,6 +416,9 @@
         document.getElementById('output_ar').innerHTML = '';
         document.getElementById('show_t').innerHTML = '';
         document.getElementById('show_dpn').innerHTML = '';
+      if (document.getElementById('objectInfo')) {
+        document.getElementById('objectInfo').innerHTML = '';
+      }
   });
   
   function ShowTime() {
@@ -307,6 +487,14 @@
 </p>
 
 <form oninput="oninputFunc()" id="form1">
+  <p><b>Buscar objeto (catalogo local J2000):</b></p>
+  <input type="text" id="objectSearch" list="objectOptions" placeholder="Ej: Omega Centauri" style="width: 20em">
+  <datalist id="objectOptions"></datalist>
+  <button type="button" onclick="applySelectedObject()">Cargar objeto</button>
+  <br>
+  <small id="objectInfo"></small>
+  <br><br>
+
   <label for="h">&#945 =</label>
   <input type="number" id="h" name="h" value="0" min="0" max="24" 
           maxlength="2" style="width:3em"  step="1"> </input>
