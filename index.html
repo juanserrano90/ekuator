@@ -609,11 +609,11 @@
     }
 
     if (visibleNow.length === 0) {
-      summary.innerHTML = "Ahora mismo no hay objetos del catálogo por encima de 30° de altura.";
+      summary.innerHTML = "Objetos con altura > 30°: 0";
       return;
     }
 
-    summary.innerHTML = "Objetos recomendados ahora (altura > 30°): " + visibleNow.length;
+    summary.innerHTML = "Objetos con altura > 30°: " + visibleNow.length;
   }
 
   function applySelectedObject() {
@@ -880,7 +880,7 @@
 </section>
 
 <section>
-  <h3>Objetos recomendados ahora</h3>
+  <h3>Recomendados ahora</h3>
   <p id="observableObjectsSummary"></p>
   <table class="tableclocks" aria-label="Objetos observables ahora">
     <thead>
