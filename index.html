@@ -20,89 +20,372 @@
 
 <!-- global style definitions  -->
 <style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+
   body {
-  color : #080808;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 16px;
-  background-color: powderblue;
-  text-align: center;
-  transition: background-color 0.3s, color 0.3s;
+    color: #080808;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 16px;
+    background-color: powderblue;
+    text-align: center;
+    transition: background-color 0.3s, color 0.3s;
   }
+
+  h1 {
+    margin: 1rem 0.5rem;
+    font-size: 2.5rem;
+  }
+
+  h2 {
+    margin: 1rem 0.5rem;
+    font-size: 1.2rem;
+  }
+
+  h3 {
+    margin: 1rem 0.5rem;
+    font-size: 1.1rem;
+  }
+
+  section {
+    margin: 1rem auto;
+    padding: 1rem;
+    max-width: 100%;
+  }
+
   button {
-  font-family: 'Courier New', Courier, monospace;
-  color: #000000;
-  background-color: #cbc8c8;
-  padding: 3px;
-  font-size: large;
+    font-family: 'Courier New', Courier, monospace;
+    color: #000000;
+    background-color: #cbc8c8;
+    padding: 8px 12px;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 0.25rem;
+    display: inline-block;
   }
-  input {
-  font-family : 'Courier New';
-  background-color: rgb(255, 255, 255);
-  color : #000000;
-  border: '2px solid #000000';
-  padding: 3px;
-  font-size: large;
+
+  button:active {
+    opacity: 0.8;
   }
+
+  input[type="text"],
+  input[type="number"] {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: rgb(255, 255, 255);
+    color: #000000;
+    border: 2px solid #000000;
+    padding: 8px;
+    font-size: 14px;
+    border-radius: 4px;
+    margin: 0.25rem;
+    max-width: 100%;
+  }
+
+  input[type="reset"] {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #cbc8c8;
+    color: #000000;
+    border: none;
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 0.25rem;
+  }
+
   form {
-  text-align: center;
-  font-size: large;
+    text-align: center;
+    font-size: 14px;
+    width: 100%;
   }
-  p {
-  font-size: large;
+
+  form p {
+    font-size: 14px;
+    margin: 0.5rem 0;
   }
+
+  label {
+    display: inline-block;
+    font-weight: bold;
+    margin: 0.5rem 0.25rem 0 0;
+  }
+
+  output {
+    display: inline-block;
+    border: 2px solid #000000;
+    background-color: #b3e5b3;
+    padding: 6px 8px;
+    margin: 0.5rem 0.25rem;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+
+  small {
+    display: inline-block;
+    font-size: 12px;
+    margin: 0.5rem 0;
+  }
+
   .tableclocks {
-  width: 100%;
-  background-color: powderblue;    
-  text-align: center;
-  margin-left: auto;
-  margin-right: auto;
-  border: 1px solid black;
-  border-collapse: collapse;
-  font-size: large;
+    width: 100%;
+    background-color: powderblue;
+    text-align: center;
+    border: 1px solid black;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 1rem 0;
+    overflow-x: auto;
+    display: block;
   }
+
+  .tableclocks tbody {
+    display: block;
+    width: 100%;
+  }
+
+  .tableclocks thead {
+    display: block;
+    background-color: #87ceeb;
+  }
+
   th, td {
-  border: 1px solid black;
-  border-collapse: collapse;
+    border: 1px solid black;
+    padding: 8px 4px;
+    text-align: center;
+  }
+
+  th {
+    font-weight: bold;
+    background-color: #87ceeb;
+  }
+
+  tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
   }
 
   /* Dark mode styles */
   body.dark-mode {
-  background-color: #121212;
-  color: #e0e0e0;
+    background-color: #121212;
+    color: #e0e0e0;
   }
-  input.dark-mode {
-  font-family : 'Courier New';
-  background-color: rgb(1, 1, 1);
-  color : #ffffff;
-  border: '2px solid #000000';
-  padding: 3px;
-  font-size: large;
+
+  body.dark-mode input[type="text"],
+  body.dark-mode input[type="number"] {
+    background-color: rgb(1, 1, 1);
+    color: #ffffff;
+    border: 2px solid #666;
   }
-  button.dark-mode {
-  background-color: #333333;
-  color: #e0e0e0;
-  padding: 3px;
-  font-size: large;
+
+  body.dark-mode button {
+    background-color: #333333;
+    color: #e0e0e0;
   }
-  .tableclocks.dark-mode {
-  background-color: #1e1e1e;
-  color: #e0e0e0;
-  width: 100%;  
-  text-align: center;
-  margin-left: auto;
-  margin-right: auto;
-  border: 1px solid black;
-  border-collapse: collapse;
-  font-size: large;
+
+  body.dark-mode input[type="reset"] {
+    background-color: #333333;
+    color: #e0e0e0;
+  }
+
+  body.dark-mode output {
+    border-color: #666;
+    background-color: #1a3a1a;
+    color: #90ee90;
+  }
+
+  body.dark-mode .tableclocks {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    border-color: #444;
+  }
+
+  body.dark-mode th {
+    background-color: #2a4a6a;
+    color: #e0e0e0;
+  }
+
+  body.dark-mode td {
+    border-color: #444;
+    background-color: #1a1a1f;
+  }
+
+  body.dark-mode tbody tr:nth-child(even) {
+    background-color: #252530;
+  }
+
+  footer {
+    margin-top: 2rem;
+    padding: 1rem;
+    background-color: #333;
+    color: #ccc;
+    font-size: 12px;
+  }
+
+  footer a {
+    color: #87ceeb;
+    text-decoration: none;
+  }
+
+  /* Mobile responsive styles */
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 2rem;
+      margin: 0.8rem 0.5rem;
+    }
+
+    h2 {
+      font-size: 1rem;
+      margin: 0.8rem 0.5rem;
+    }
+
+    section {
+      margin: 0.8rem auto;
+      padding: 0.8rem 0.5rem;
+    }
+
+    button {
+      padding: 6px 10px;
+      font-size: 13px;
+      margin: 0.2rem;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      padding: 6px;
+      font-size: 13px;
+      margin: 0.2rem;
+      width: 70px;
+    }
+
+    input[type="text"][style*="width: 20em"] {
+      width: 100% !important;
+      max-width: 100%;
+    }
+
+    form p {
+      font-size: 13px;
+      margin: 0.4rem 0;
+    }
+
+    label {
+      font-size: 13px;
+      margin: 0.3rem 0.2rem 0 0;
+    }
+
+    output {
+      display: block;
+      font-size: 12px;
+      margin: 0.5rem auto;
+      padding: 6px 4px;
+    }
+
+    .tableclocks {
+      font-size: 11px;
+      margin: 0.8rem 0;
+    }
+
+    th, td {
+      padding: 6px 3px;
+      font-size: 11px;
+    }
+
+    th {
+      word-wrap: break-word;
+    }
+  }
+
+  @media (max-width: 480px) {
+    h1 {
+      font-size: 1.5rem;
+      margin: 0.5rem 0.3rem;
+    }
+
+    h2 {
+      font-size: 0.9rem;
+      margin: 0.5rem 0.3rem;
+    }
+
+    h3 {
+      font-size: 0.9rem;
+      margin: 0.5rem 0.3rem;
+    }
+
+    section {
+      margin: 0.5rem auto;
+      padding: 0.5rem;
+    }
+
+    button {
+      padding: 5px 8px;
+      font-size: 12px;
+      margin: 0.15rem;
+      width: auto;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      padding: 5px;
+      font-size: 12px;
+      margin: 0.15rem;
+      width: 55px;
+    }
+
+    input[type="text"][style*="width: 20em"] {
+      width: 100% !important;
+    }
+
+    form p {
+      font-size: 12px;
+      margin: 0.3rem 0;
+    }
+
+    label {
+      font-size: 12px;
+      margin: 0.2rem 0.15rem 0 0;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    output {
+      display: block;
+      font-size: 11px;
+      margin: 0.4rem auto;
+      padding: 5px 3px;
+    }
+
+    .tableclocks {
+      font-size: 10px;
+      margin: 0.5rem 0;
+    }
+
+    th, td {
+      padding: 5px 2px;
+      font-size: 10px;
+    }
+
+    footer {
+      font-size: 11px;
+      padding: 0.8rem 0.5rem;
+    }
   }
 </style>
 
 <!-- meta info about the website  -->
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
 <meta name="keywords" content="Gran Ecuatorial, Observatorio de La Plata, Ekuator">
 <meta name="description" content="Aplicación ara observar con el telescopio Gran Ecuatorial">
 <meta name="author" content="Juan Serrano">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <!-- javascript code -->
@@ -542,7 +825,7 @@
 
 <body onload="LoadUserSetting()">
 <!-- heading and description of website -->
-<h1 title="2.0" style="text-align:center;font-size:7vw;font-family:'Courier New'">
+<h1 title="2.0">
   Ekuator
 </h1>
 
@@ -554,61 +837,51 @@
   });
 </script>
 
-<h2 class="dark-mode-toggle" style="text-align:center;font-size: large;font-family:'Courier New';border:1px solid rgb(2, 2, 2)">
-  Para usuarios del telescopio Gran Ecuatorial <br> del Observatorio Astronómico de La Plata
+<h2 class="dark-mode-toggle">
+  Telescopio Gran Ecuatorial FCAG
 </h2>
 
 <!-- coordinates entry by user -->
 <section>
-<p style="width:auto">
-  Esta aplicación transforma las coordenadas absolutas de la fecha 
-  a las coordenadas locales del telescopio. 
-  Ingrese la Ascención Recta (&#945) en <b>hh:mm:ss.ss</b>
-  y la Declinación (&#948) en <b>gg:mm:ss.ss</b>.
+<p>
+  Coordenadas J2000: Ascención Recta (&#945) en <b>hh:mm:ss.ss</b> y Declinación (&#948) en <b>gg:mm:ss.ss</b>
 </p>
 
 <form oninput="oninputFunc()" id="form1">
-  <p><b>Buscar objeto:</b></p>
-  <input type="text" id="objectSearch" list="objectOptions" placeholder="Ej: Omega Centauri" style="width: 20em">
+  <p><b>Buscar en catálogo:</b></p>
+  <input type="text" id="objectSearch" list="objectOptions" placeholder="Ej: Omega Centauri">
   <datalist id="objectOptions"></datalist>
-  <button type="button" onclick="applySelectedObject()">Cargar objeto</button>
+  <button type="button" onclick="applySelectedObject()">Cargar</button>
   <br>
   <small id="objectInfo"></small>
   <br><br>
 
-  <label for="h">&#945 =</label>
-  <input type="number" id="h" name="h" value="0" min="0" max="24" 
-          maxlength="2" style="width:3em"  step="1"> </input>
-  <input type="number" id="m" name="m" value="0" min="0" max="60" 
-          maxlength="2" style="width:3em" step="1"> 
-  <input type="number" id="s" name="s" value="00.00" min="0" max="60" 
-          step="0.01" maxlength="5" style="width:4.2em"> =  <output id="output_ar"></output>
+  <label for="h">&#945 (Ascención Recta)</label><br>
+  <input type="number" id="h" name="h" value="0" min="0" max="24" maxlength="2" step="1" placeholder="hh"> 
+  <input type="number" id="m" name="m" value="0" min="0" max="60" maxlength="2" step="1" placeholder="mm"> 
+  <input type="number" id="s" name="s" value="00.00" min="0" max="60" step="0.01" maxlength="5" placeholder="ss.ss">
+  <output id="output_ar"></output>
 
 <br>
 <br>
 
-  <label for="h">&#948 = </label>
-  <input type="number" id="deg" id="deg" value="0" min="-90" max="90" 
-          maxlength="3" style="width:3em" step="1">
-  <input type="number" id="min" id="min" value="0" min="-60" max="60" 
-          maxlength="3" style="width:3em" step="1">
-  <input type="number" id="sec" id="sec" value="00.00" min="-60" max="60" 
-          step="0.01" maxlength="6" style="width:4.2em"> =  <output id="output_dec"></output>
-<br>
-<br>
-<input type="reset">
-<button type="button" onclick="calculate()">Calcular</button> <br> <br>
-<output id="show_t" style="border: 2px solid black;size: 10px;background-color: #89f689;padding: 5px;
-                          font-size: large;color: rgb(0, 0, 0);">t = </output>  
-<br> <br>
-<output id="show_dpn" style="border: 2px solid black;size: 10px;background-color: #89f689;padding: 5px;
-font-size: large;color: rgb(0, 0, 0);">DPN = </output>
+  <label for="deg">&#948 (Declinación)</label><br>
+  <input type="number" id="deg" name="deg" value="0" min="-90" max="90" maxlength="3" step="1" placeholder="dd">
+  <input type="number" id="min" name="min" value="0" min="-60" max="60" maxlength="3" step="1" placeholder="mm">
+  <input type="number" id="sec" name="sec" value="00.00" min="-60" max="60" step="0.01" maxlength="6" placeholder="ss.ss">
+  <output id="output_dec"></output>
+<br><br>
+<button type="button" onclick="calculate()">Calcular</button>
+<input type="reset" value="Limpiar">
+<br><br>
+<output id="show_t">t = </output>  
+<output id="show_dpn">DPN = </output>
 </form> 
 </section>
 
 <section>
-  <h3 style="font-family:'Courier New';margin-bottom: 0.3em;">Objetos recomendados para observar ahora</h3>
-  <p id="observableObjectsSummary" style="margin-top: 0;"></p>
+  <h3>Objetos recomendados ahora</h3>
+  <p id="observableObjectsSummary"></p>
   <table class="tableclocks" aria-label="Objetos observables ahora">
     <thead>
       <tr>
@@ -623,9 +896,9 @@ font-size: large;color: rgb(0, 0, 0);">DPN = </output>
   </table>
 </section>
 
-<br> <br>
-<!-- Clocks panel -->
-<div >
+<section>
+<!-- Observatorio Status -->
+<h3>Estado del observatorio</h3>
 <table class="tableclocks">
 <tbody>
   <tr>
@@ -642,11 +915,10 @@ font-size: large;color: rgb(0, 0, 0);">DPN = </output>
   </tr>
 </tbody>
 </table>
-</div>
-<br>
+</section>
 
 <footer>
-  <p style="font-size:small;font-family:'Courier New', Courier, monospace">Sugerencias o problemas: contactame en juann.serrano@gmail.com</p>
+  <p>Sugerencias o problemas: <a href="mailto:juann.serrano@gmail.com">juann.serrano@gmail.com</a></p>
 </footer>
 
 </body>
