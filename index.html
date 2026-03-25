@@ -109,18 +109,21 @@
 <script>
   let longitude = -57.932772; // longitude of the telescope
   const southernObjectCatalog = [
-    { name: "Omega Centauri", type: "Cluster", ra: { h: 13, m: 26, s: 47.28 }, dec: { d: -47, m: 28, s: 46.1 } },
-    { name: "47 Tucanae", type: "Cluster", ra: { h: 0, m: 24, s: 5.67 }, dec: { d: -72, m: 4, s: 52.6 } },
-    { name: "Jewel Box (NGC 4755)", type: "Cluster", ra: { h: 12, m: 53, s: 41.0 }, dec: { d: -60, m: 21, s: 18.0 } },
-    { name: "Eta Carinae Nebula", type: "Nebula", ra: { h: 10, m: 45, s: 3.59 }, dec: { d: -59, m: 41, s: 4.3 } },
-    { name: "Tarantula Nebula", type: "Nebula", ra: { h: 5, m: 38, s: 42.4 }, dec: { d: -69, m: 6, s: 3.0 } },
-    { name: "Canopus", type: "Star", ra: { h: 6, m: 23, s: 57.11 }, dec: { d: -52, m: 41, s: 44.38 } },
-    { name: "Achernar", type: "Star", ra: { h: 1, m: 37, s: 42.85 }, dec: { d: -57, m: 14, s: 12.31 } },
-    { name: "Alpha Centauri", type: "Star", ra: { h: 14, m: 39, s: 36.49 }, dec: { d: -60, m: 50, s: 2.37 } },
-    { name: "Large Magellanic Cloud", type: "Galaxy", ra: { h: 5, m: 23, s: 34.5 }, dec: { d: -69, m: 45, s: 22.0 } },
-    { name: "Small Magellanic Cloud", type: "Galaxy", ra: { h: 0, m: 52, s: 44.8 }, dec: { d: -72, m: 49, s: 43.0 } },
-    { name: "Sculptor Galaxy (NGC 253)", type: "Galaxy", ra: { h: 0, m: 47, s: 33.1 }, dec: { d: -25, m: 17, s: 18.0 } },
-    { name: "Centaurus A", type: "Galaxy", ra: { h: 13, m: 25, s: 27.6 }, dec: { d: -43, m: 1, s: 9.0 } }
+    { name: "Omega Centauri", type: "Cúmulo", ra: { h: 13, m: 26, s: 47.28 }, dec: { d: -47, m: 28, s: 46.1 } },
+    { name: "47 Tucanae", type: "Cúmulo", ra: { h: 0, m: 24, s: 5.67 }, dec: { d: -72, m: 4, s: 52.6 } },
+    { name: "Nebulosa de Orion", type: "Nebulosa", ra: { h: 5, m: 35, s: 17.09 }, dec: { d: -5, m: 23, s: 37.8 } },
+    { name: "Joyero (NGC 4755)", type: "Cúmulo", ra: { h: 12, m: 53, s: 41.0 }, dec: { d: -60, m: 21, s: 18.0 } },
+    { name: "Eta Carinae Nebula", type: "Nebulosa", ra: { h: 10, m: 45, s: 3.59 }, dec: { d: -59, m: 41, s: 4.3 } },
+    { name: "Tarantula Nebula", type: "Nebulosa", ra: { h: 5, m: 38, s: 42.4 }, dec: { d: -69, m: 6, s: 3.0 } },
+    { name: "Canopus", type: "Estrella", ra: { h: 6, m: 23, s: 57.11 }, dec: { d: -52, m: 41, s: 44.38 } },
+    { name: "Achernar", type: "Estrella", ra: { h: 1, m: 37, s: 42.85 }, dec: { d: -57, m: 14, s: 12.31 } },
+    { name: "Alpha Centauri", type: "Estrella", ra: { h: 14, m: 39, s: 36.49 }, dec: { d: -60, m: 50, s: 2.37 } },
+    { name: "Gran Nube de Magallanes", type: "Galaxia", ra: { h: 5, m: 23, s: 34.5 }, dec: { d: -69, m: 45, s: 22.0 } },
+    { name: "Pequeña Nube de Magallanes", type: "Galaxia", ra: { h: 0, m: 52, s: 44.8 }, dec: { d: -72, m: 49, s: 43.0 } },
+    { name: "Sculptor Galaxy (NGC 253)", type: "Galaxia", ra: { h: 0, m: 47, s: 33.1 }, dec: { d: -25, m: 17, s: 18.0 } },
+    { name: "Centaurus A", type: "Galaxia", ra: { h: 13, m: 25, s: 27.6 }, dec: { d: -43, m: 1, s: 9.0 } },
+    { name: "Pozo de los Deseos (NGC 3532)", type: "Cúmulo", ra: { h: 11, m: 5, s: 41.44 }, dec: { d: -58, m: 45, s: 19.8 } },
+    { name: "Neptuno", type: "Planeta", ra: { h: 0, m: 7, s: 51.80 }, dec: { d: -0, m: 34, s: 19.9 } }
   ];
 
   function LoadUserSetting() { 
