@@ -65,7 +65,7 @@
     color: #000000;
     background-color: #cbc8c8;
     padding: 8px 12px;
-    font-size: 14px;
+    font-size: 16px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -84,7 +84,7 @@
     color: #000000;
     border: 2px solid #000000;
     padding: 8px;
-    font-size: 14px;
+    font-size: 16px;
     border-radius: 4px;
     margin: 0.25rem;
     max-width: 100%;
@@ -96,7 +96,7 @@
     color: #000000;
     border: none;
     padding: 8px 12px;
-    font-size: 14px;
+    font-size: 16px;
     border-radius: 4px;
     cursor: pointer;
     margin: 0.25rem;
@@ -104,12 +104,12 @@
 
   form {
     text-align: center;
-    font-size: 14px;
+    font-size: 16px;
     width: 100%;
   }
 
   form p {
-    font-size: 14px;
+    font-size: 16px;
     margin: 0.5rem 0;
   }
 
@@ -126,7 +126,7 @@
     padding: 6px 8px;
     margin: 0.5rem 0.25rem;
     border-radius: 4px;
-    font-size: 13px;
+    font-size: 15px;
   }
 
   small {
@@ -141,7 +141,7 @@
     text-align: center;
     border: 1px solid black;
     border-collapse: collapse;
-    font-size: 13px;
+    font-size: 15px;
     margin: 1rem 0;
     overflow-x: auto;
     display: block;
@@ -649,8 +649,7 @@
     oninputFunc();
     calculate();
 
-    infoOutput.innerHTML = selected.type + " | J2000: AR " + formatHMS(selected.ra) + " Dec " + formatDMS(selected.dec) +
-                           " | Fecha: AR " + formatHMS(raDate) + " Dec " + formatDMS(decDate);
+    infoOutput.innerHTML = "";
   }
 
 
@@ -813,6 +812,7 @@
     long_sec = long_sec.toFixed(2);
 
     document.getElementById("Longitude").innerHTML = long_deg + "°" + long_min + "'" + long_sec + "&#34";
+    document.getElementById("Latitude").innerHTML = latitude.toFixed(5) + "°";
     document.getElementById("MyClockDisplay").innerHTML = time;
     document.getElementById("MyLSTClockDisplay").innerHTML = lst;
     updateObservableObjects();
@@ -838,13 +838,13 @@
 </script>
 
 <h2 class="dark-mode-toggle">
-  Telescopio Gran Ecuatorial FCAG
+  Telescopio Gran Ecuatorial - FCAG
 </h2>
 
 <!-- coordinates entry by user -->
 <section>
 <p>
-  Coordenadas J2000: Ascención Recta (&#945) en <b>hh:mm:ss.ss</b> y Declinación (&#948) en <b>gg:mm:ss.ss</b>
+  Transforma las coordenadas absolutas de la fecha a las coordenadas locales del telescopio. Ingresar la Ascención Recta (&#945) en <b>hh:mm:ss.ss</b> y Declinación (&#948) en <b>gg:mm:ss.ss</b>
 </p>
 
 <form oninput="oninputFunc()" id="form1">
