@@ -109,21 +109,29 @@
 <script>
   let longitude = -57.932772; // longitude of the telescope
   const southernObjectCatalog = [
-    { name: "Omega Centauri", type: "Cúmulo", ra: { h: 13, m: 26, s: 47.28 }, dec: { d: -47, m: 28, s: 46.1 } },
-    { name: "47 Tucanae", type: "Cúmulo", ra: { h: 0, m: 24, s: 5.67 }, dec: { d: -72, m: 4, s: 52.6 } },
-    { name: "Nebulosa de Orion", type: "Nebulosa", ra: { h: 5, m: 35, s: 17.09 }, dec: { d: -5, m: 23, s: 37.8 } },
-    { name: "Joyero (NGC 4755)", type: "Cúmulo", ra: { h: 12, m: 53, s: 41.0 }, dec: { d: -60, m: 21, s: 18.0 } },
-    { name: "Eta Carinae Nebula", type: "Nebulosa", ra: { h: 10, m: 45, s: 3.59 }, dec: { d: -59, m: 41, s: 4.3 } },
-    { name: "Tarantula Nebula", type: "Nebulosa", ra: { h: 5, m: 38, s: 42.4 }, dec: { d: -69, m: 6, s: 3.0 } },
-    { name: "Canopus", type: "Estrella", ra: { h: 6, m: 23, s: 57.11 }, dec: { d: -52, m: 41, s: 44.38 } },
-    { name: "Achernar", type: "Estrella", ra: { h: 1, m: 37, s: 42.85 }, dec: { d: -57, m: 14, s: 12.31 } },
-    { name: "Alpha Centauri", type: "Estrella", ra: { h: 14, m: 39, s: 36.49 }, dec: { d: -60, m: 50, s: 2.37 } },
-    { name: "Gran Nube de Magallanes", type: "Galaxia", ra: { h: 5, m: 23, s: 34.5 }, dec: { d: -69, m: 45, s: 22.0 } },
-    { name: "Pequeña Nube de Magallanes", type: "Galaxia", ra: { h: 0, m: 52, s: 44.8 }, dec: { d: -72, m: 49, s: 43.0 } },
-    { name: "Sculptor Galaxy (NGC 253)", type: "Galaxia", ra: { h: 0, m: 47, s: 33.1 }, dec: { d: -25, m: 17, s: 18.0 } },
-    { name: "Centaurus A", type: "Galaxia", ra: { h: 13, m: 25, s: 27.6 }, dec: { d: -43, m: 1, s: 9.0 } },
+    { name: "Omega Centauri (NGC 5139)", type: "Cúmulo", ra: { h: 13, m: 26, s: 49.05 }, dec: { d: -47, m: 28, s: 47.3 } },
+    { name: "47 Tucanae (NGC 104)", type: "Cúmulo", ra: { h: 0, m: 24, s: 1.38 }, dec: { d: -72, m: 4, s: 56.5 } },
+    { name: "Nebulosa de Orion (M42)", type: "Nebulosa", ra: { h: 5, m: 35, s: 17.09 }, dec: { d: -5, m: 23, s: 37.8 } },
+    { name: "Joyero (NGC 4755)", type: "Cúmulo", ra: { h: 12, m: 53, s: 41.0 }, dec: { d: -60, m: 21, s: 44.0 } },
+    { name: "Nebulosa de Eta Carinae (NGC 3372)", type: "Nebulosa", ra: { h: 10, m: 44, s: 21.32 }, dec: { d: -59, m: 53, s: 31.4 } },
+    { name: "Nebulosa de la Tarantula (30 Doradus)", type: "Nebulosa", ra: { h: 5, m: 38, s: 41.46 }, dec: { d: -69, m: 6, s: 20.3 } },
+    { name: "Canopus", type: "Estrella", ra: { h: 6, m: 23, s: 57.11 }, dec: { d: -52, m: 42, s: 3.0 } },
+    { name: "Achernar", type: "Estrella", ra: { h: 1, m: 37, s: 40.92 }, dec: { d: -57, m: 14, s: 24.0 } },
+    { name: "Alfa Centauri", type: "Estrella", ra: { h: 14, m: 39, s: 29.9 }, dec: { d: -60, m: 48, s: 33.0 } },
+    { name: "Gran Nube de Magallanes (LMC)", type: "Galaxia", ra: { h: 5, m: 23, s: 34.5 }, dec: { d: -69, m: 45, s: 42.0 } },
+    { name: "Pequeña Nube de Magallanes (SMC)", type: "Galaxia", ra: { h: 0, m: 52, s: 33.8 }, dec: { d: -72, m: 48, s: 6.0 } },
+    { name: "Galaxia Escultor (NGC 253)", type: "Galaxia", ra: { h: 0, m: 47, s: 31.7 }, dec: { d: -25, m: 17, s: 28.0 } },
+    { name: "Centauro A (NGC 5128)", type: "Galaxia", ra: { h: 13, m: 25, s: 29.6 }, dec: { d: -43, m: 1, s: 10.0 } },
     { name: "Pozo de los Deseos (NGC 3532)", type: "Cúmulo", ra: { h: 11, m: 5, s: 41.44 }, dec: { d: -58, m: 45, s: 19.8 } },
-    { name: "Neptuno", type: "Planeta", ra: { h: 0, m: 7, s: 51.80 }, dec: { d: -0, m: 34, s: 19.9 } }
+    { name: "Nebulosa del Cometa Falso (NGC 6231)", type: "Cúmulo", ra: { h: 16, m: 54, s: 9.0 }, dec: { d: -41, m: 49, s: 30.0 } },
+    { name: "Nebulosa de la Laguna (M8)", type: "Nebulosa", ra: { h: 18, m: 3, s: 37.0 }, dec: { d: -24, m: 22, s: 40.0 } },
+    { name: "Nebulosa Trífida (M20)", type: "Nebulosa", ra: { h: 18, m: 2, s: 41.0 }, dec: { d: -22, m: 58, s: 19.4 } },
+    { name: "Cúmulo Mariposa (M6)", type: "Cúmulo", ra: { h: 17, m: 40, s: 20.15 }, dec: { d: -32, m: 15, s: 7.7 } },
+    { name: "Cúmulo de Ptolomeo (M7)", type: "Cúmulo", ra: { h: 17, m: 53, s: 51.27 }, dec: { d: -34, m: 47, s: 30.8 } },
+    { name: "Nebulosa del Pollo corredor (Lambda Cen - C 100)", type: "Nebulosa", ra: { h: 11, m: 38, s: 23.16 }, dec: { d: -63, m: 22, s: 28.6 } },
+    { name: "Cúmulo Perla (NGC 3766)", type: "Cúmulo", ra: { h: 11, m: 36, s: 20.60 }, dec: { d: -61, m: 37, s: 0.0 } },
+    { name: "Cúmulo de Gemas (NGC 3293)", type: "Cúmulo", ra: { h: 10, m: 35, s: 51.36 }, dec: { d: -58, m: 13, s: 59.2 } },
+    { name: "Nebulosa de Gabriela Mistral (NGC 3324)", type: "Cúmulo", ra: { h: 10, m: 37, s: 22.10 }, dec: { d: -58, m: 38, s: 42.3 } },
   ];
 
   function LoadUserSetting() { 
