@@ -744,10 +744,10 @@
     
     // Determine mount pillar position
     var displayT = t;
-    var pillarPosition = "ESTE";
+    var pillarMessage = "TELESCOPIO AL ESTE DEL PILAR";
     if (t > 12) {
       displayT = t - 12;
-      pillarPosition = "OESTE";
+      pillarMessage = "TELESCOPIO AL OESTE DEL PILAR";
     }
     
     // compute hour angle in hours, minutes and seconds
@@ -767,9 +767,10 @@
     dpn = dpn - min; 
     dpn = dpn * 60;
     sec = Math.floor(dpn);
-    document.getElementById("show_t").innerHTML = "t = " + hour + 'h ' + minute + 'm ' + second + 's';
+    document.getElementById("show_t").innerHTML = "t* = " + hour + 'h ' + minute + 'm ' + second + 's';
     document.getElementById("show_dpn").innerHTML = "DPN = " + deg + '° ' + min + '′ ' + sec +' ″';
-    document.getElementById("show_pillar").innerHTML = "Montura: PILAR AL " + pillarPosition;
+    document.getElementById("show_pillar").innerHTML = pillarMessage;
+    document.getElementById("show_t_note").innerHTML = "* t* muestra t si t<=12h, y muestra t-12h si t>12h, ya que así se muestra en el círculo horario del telescopio.";
   }
   
   // script that shows the input to the side 
@@ -789,6 +790,7 @@
         document.getElementById('show_t').innerHTML = '';
         document.getElementById('show_dpn').innerHTML = '';
         document.getElementById('show_pillar').innerHTML = '';
+        document.getElementById('show_t_note').innerHTML = '';
       if (document.getElementById('objectInfo')) {
         document.getElementById('objectInfo').innerHTML = '';
       }
@@ -888,6 +890,7 @@
 <output id="show_t">t = </output>  
 <output id="show_dpn">DPN = </output>
 <output id="show_pillar"></output>
+<small id="show_t_note"></small>
 </form> 
 </section>
 
