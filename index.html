@@ -741,14 +741,23 @@
     if (t < 0) {
       t = t + 24;
     }
+    
+    // Determine mount pillar position
+    var displayT = t;
+    var pillarPosition = "ESTE";
+    if (t > 12) {
+      displayT = t - 12;
+      pillarPosition = "OESTE";
+    }
+    
     // compute hour angle in hours, minutes and seconds
-    hour = Math.floor(t);
-    t = t - hour;
-    t = t * 60;
-    minute = Math.floor(t);
-    t = t - minute; 
-    t = t * 60;
-    second = Math.floor(t);
+    hour = Math.floor(displayT);
+    displayT = displayT - hour;
+    displayT = displayT * 60;
+    minute = Math.floor(displayT);
+    displayT = displayT - minute; 
+    displayT = displayT * 60;
+    second = Math.floor(displayT);
     var dpn = parseFloat(90) - parseFloat(deg) + parseFloat(min/60) + parseFloat(sec/3600);
     // compute dpn in degrees, minutes and seconds
     deg = Math.floor(dpn); 
@@ -760,6 +769,7 @@
     sec = Math.floor(dpn);
     document.getElementById("show_t").innerHTML = "t = " + hour + 'h ' + minute + 'm ' + second + 's';
     document.getElementById("show_dpn").innerHTML = "DPN = " + deg + '° ' + min + '′ ' + sec +' ″';
+    document.getElementById("show_pillar").innerHTML = "Montura: PILAR AL " + pillarPosition;
   }
   
   // script that shows the input to the side 
@@ -778,6 +788,7 @@
         document.getElementById('output_ar').innerHTML = '';
         document.getElementById('show_t').innerHTML = '';
         document.getElementById('show_dpn').innerHTML = '';
+        document.getElementById('show_pillar').innerHTML = '';
       if (document.getElementById('objectInfo')) {
         document.getElementById('objectInfo').innerHTML = '';
       }
@@ -876,6 +887,7 @@
 <br><br>
 <output id="show_t">t = </output>  
 <output id="show_dpn">DPN = </output>
+<output id="show_pillar"></output>
 </form> 
 </section>
 
