@@ -421,6 +421,8 @@
   function LoadUserSetting() { 
     initializeObjectSearch();
     ShowTime();
+    updateObservatoryConditions();
+    setInterval(updateObservatoryConditions, 600000);
   }
 
   function initializeObjectSearch() {
@@ -728,6 +730,85 @@
     }
     return LST; // in degrees
   }
+
+  function weatherCodeToText(code) {
+    const weatherMap = {
+      0: "Despejado",
+      1: "Mayormente despejado",
+      2: "Parcialmente nublado",
+      3: "Nublado",
+      45: "Niebla",
+      48: "Niebla con escarcha",
+      51: "Llovizna ligera",
+      53: "Llovizna moderada",
+      55: "Llovizna intensa",
+      56: "Llovizna helada ligera",
+      57: "Llovizna helada intensa",
+      61: "Lluvia ligera",
+      63: "Lluvia moderada",
+      65: "Lluvia intensa",
+      66: "Lluvia helada ligera",
+      67: "Lluvia helada intensa",
+      71: "Nieve ligera",
+      73: "Nieve moderada",
+      75: "Nieve intensa",
+      77: "Granizos de nieve",
+      80: "Chubascos ligeros",
+      81: "Chubascos moderados",
+      82: "Chubascos intensos",
+      85: "Chubascos de nieve ligeros",
+      86: "Chubascos de nieve intensos",
+      95: "Tormenta",
+      96: "Tormenta con granizo ligero",
+      99: "Tormenta con granizo intenso"
+    };
+    return weatherMap[code] || "No disponible";
+  }
+
+  async function updateObservatoryConditions() {
+    const obsDate = document.getElementById("ObsDate");
+    const sunrise = document.getElementById("SunriseTime");
+    const sunset = document.getElementById("SunsetTime");
+    const weather = document.getElementById("CurrentWeather");
+
+    if (!obsDate || !sunrise || !sunset || !weather) {
+      return;
+    }
+
+    try {
+      const url = "https://api.open-meteo.com/v1/forecast?latitude=" + latitude +
+                  "&longitude=" + longitude +
+                  "&daily=sunrise,sunset&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&timezone=auto&forecast_days=1";
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error("No se pudo obtener la informacion del observatorio");
+      }
+
+      const data = await response.json();
+      const todayDate = data.daily && data.daily.time ? data.daily.time[0] : "";
+      const sunriseISO = data.daily && data.daily.sunrise ? data.daily.sunrise[0] : "";
+      const sunsetISO = data.daily && data.daily.sunset ? data.daily.sunset[0] : "";
+
+      obsDate.innerHTML = todayDate ? new Date(todayDate + "T00:00:00").toLocaleDateString('es-AR') : "No disponible";
+      sunrise.innerHTML = sunriseISO ? new Date(sunriseISO).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }) : "No disponible";
+      sunset.innerHTML = sunsetISO ? new Date(sunsetISO).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }) : "No disponible";
+
+      if (data.current) {
+        const weatherText = weatherCodeToText(data.current.weather_code);
+        const temp = data.current.temperature_2m;
+        const humidity = data.current.relative_humidity_2m;
+        const wind = data.current.wind_speed_10m;
+        weather.innerHTML = weatherText + " | " + temp + "°C | HR " + humidity + "% | Viento " + wind + " km/h";
+      } else {
+        weather.innerHTML = "No disponible";
+      }
+    } catch (error) {
+      obsDate.innerHTML = "No disponible";
+      sunrise.innerHTML = "No disponible";
+      sunset.innerHTML = "No disponible";
+      weather.innerHTML = "No disponible";
+    }
+  }
   
   // script to calculate the local coordinates
   function calculate() {
@@ -770,7 +851,7 @@
     document.getElementById("show_t").innerHTML = "t* = " + hour + 'h ' + minute + 'm ' + second + 's';
     document.getElementById("show_dpn").innerHTML = "DPN = " + deg + '° ' + min + '′ ' + sec +' ″';
     document.getElementById("show_pillar").innerHTML = pillarMessage;
-    document.getElementById("show_t_note").innerHTML = "* t* muestra t si t<=12h, y muestra t-12h si t>12h, ya que así se muestra en el círculo horario del telescopio.";
+    document.getElementById("show_t_note").innerHTML = "* t* muestra t si t<=12h, y muestra t-12h si t>12h, ya que así se lee en el círculo horario del telescopio";
   }
   
   // script that shows the input to the side 
@@ -927,6 +1008,18 @@
     <td id="MyLSTClockDisplay"></td>
     <td id="Longitude"></td>
     <td id="Latitude"></td>
+  </tr>
+  <tr>
+    <th>Fecha</th>
+    <th>Amanecer</th>
+    <th>Atardecer</th>
+    <th>Clima actual</th>
+  </tr>
+  <tr>
+    <td id="ObsDate"></td>
+    <td id="SunriseTime"></td>
+    <td id="SunsetTime"></td>
+    <td id="CurrentWeather"></td>
   </tr>
 </tbody>
 </table>
